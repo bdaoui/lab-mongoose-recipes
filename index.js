@@ -23,7 +23,7 @@ mongoose
 
   })
 
-    .then(() =>{
+  .then(() =>{
       Recipe.findOneAndUpdate( {title: "Rigatoni alla Genovese"}, {duration: 100}, {new:true}, (error, data)  =>{
         console.log(data);
         if(!error){ return console.log(data);} // the fancy way to not use else
@@ -33,20 +33,20 @@ mongoose
     })
 
 
-    .then( () =>{
+  .then( () =>{
       return Recipe.deleteOne( {name: "Carrot Cake"}).then( ()=>{
         console.log('Data deleted');
       })
     })
 
-  .catch(error => {
+  .then( ()=>{
+    mongoose.connection.close( ()=>{
+      console.log("mongo connection disconnected");
+      process.exit(0);
+    })
+  })
+    
+
+.catch(error => {
     console.error('Error connecting to the database', error);
   })
-
-  process.on("SIGINT", () =>{
-    mongoose.connection.close( ()=>{
-      console.log("Mongoose disconnected");
-      process.exit(0);
-    });
-  });
-
