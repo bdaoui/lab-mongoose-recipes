@@ -15,9 +15,38 @@ mongoose
     // Before adding any recipes to the database, let's remove all existing ones
     return Recipe.deleteMany()
   })
+
   .then(() => {
     // Run your code here, after you have insured that the connection was made
+    // Recipe.create( { title : ""} );
+    return Recipe.insertMany(data);
+
   })
+
+    .then(() =>{
+      Recipe.findOneAndUpdate( {title: "Rigatoni alla Genovese"}, {duration: 100}, {new:true}, (error, data)  =>{
+        console.log(data);
+        if(!error){ return console.log(data);} // the fancy way to not use else
+        return console.log(error)
+        } 
+      )
+    })
+
+
+    .then( () =>{
+      return Recipe.deleteOne( {name: "Carrot Cake"}).then( ()=>{
+        console.log('Data deleted');
+      })
+    })
+
   .catch(error => {
     console.error('Error connecting to the database', error);
+  })
+
+  process.on("SIGINT", () =>{
+    mongoose.connection.close( ()=>{
+      console.log("Mongoose disconnected");
+      process.exit(0);
+    });
   });
+
